@@ -1,36 +1,30 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/header";
 import Inputbox from "./components/Inputbox";
 import Todolist from "./components/Todolist";
+import { todo } from "./type/type";
+
+import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState(initialTodos); // todos state
+  const saveTodos = localStorage["todos"]
+    ? JSON.parse(localStorage.getItem("todos") || "")
+    : [];
+  const [todos, setTodos] = useState<todo[]>(saveTodos); // todos state
+  console.log("👉👉  todos", todos);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }); // useEffect에 의존성 배열이 없을 때+
   return (
-    <main>
-      <Header> my todo-list </Header>
-      <Inputbox setTodos={setTodos}></Inputbox>
-      <Todolist todos={todos}></Todolist>
-    </main>
+    <div className="container">
+      <main className="app-wrapper">
+        <Header> my todo-list </Header>
+        <Inputbox todos={todos} setTodos={setTodos} />
+        <Todolist todos={todos} setTodos={setTodos} />
+      </main>
+    </div>
   );
 }
-
-// 기본 Todos 데이터
-const initialTodos = [
-  {
-    id: 1,
-    title: "첫 게시글!",
-    boddy: "투두를 남깁니다",
-  },
-  {
-    id: 2,
-    title: "두번째 게시글!",
-    boddy: "투두를 남깁니다2",
-  },
-  {
-    id: 3,
-    title: "세번째 게시글!",
-    boddy: "투두를 남깁니다3",
-  },
-];
 
 export default App;

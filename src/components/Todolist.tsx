@@ -1,25 +1,46 @@
 import { todo } from "../type/type";
 
-export default function Todolist({ todos }: any) {
-  return (
-    <section>
-      {/* props 로 전달받은 todos 를 하나씩 받아 html 형태로 생성*/}
-      {todos.map((todo: todo) => {
-        return (
-          <div key={todo.id}>
-            <hr />
-            <h1>{todo.title}</h1>
-            <span>{todo.boddy}</span>
-            <hr />
-          </div>
-        );
-      })}
-    </section>
-  );
+interface Props {
+  // 전달받은 props도 type 명시를 해줘야 함
+  todos: todo[];
+  setTodos: React.Dispatch<React.SetStateAction<todo[]>>;
 }
 
-interface initial {
-  id: number;
-  title: string;
-  boddy: string;
+export default function Todolist({ todos, setTodos }: Props) {
+  const deleteTodo = (data: todo) => {
+    setTodos(todos.filter((clickTodo) => clickTodo.todoId !== data.todoId));
+  };
+  const clearTodo = (data: todo) => {
+    // data.clear = !data.clear; // 이게 왜 되는거지...
+    setTodos(
+      todos.map((todo: todo) => {
+        if (todo.todoId === data.todoId) {
+          return { ...todo, clear: !todo.clear };
+        }
+        return todo;
+      })
+    );
+  };
+
+  return (
+    <ul>
+      {todos.map((data: todo) => {
+        return (
+          <li className="list-todo" key={data.todoId}>
+            <p className={data.clear ? "complete" : ""}>{data.todoContent}</p>
+            <div>
+              <button
+                className="button-delete"
+                onClick={() => deleteTodo(data)}
+              >{`삭제`}</button>
+              <button
+                className="button-clear"
+                onClick={() => clearTodo(data)}
+              >{`완료`}</button>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
 }

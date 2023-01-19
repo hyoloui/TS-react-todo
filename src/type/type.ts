@@ -1,5 +1,5 @@
 export interface todo {
-  id: string;
-  title: string;
-  boddy: string;
+  todoId: string;
+  todoContent: string;
+  clear: boolean;
 }

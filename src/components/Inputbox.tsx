@@ -1,39 +1,35 @@
-import React, { useState } from "react";
-import { v4 } from "uuid";
+import { useState } from "react";
+import { v4 as uuid } from "uuid";
+import { todo } from "../type/type";
+interface Props {
+  // 전달받은 props도 type 명시를 해줘야 함
+  todos: todo[];
+  setTodos: React.Dispatch<React.SetStateAction<todo[]>>;
+}
 
-export default function Inputbox({ setTodos }: any) {
-  const [title, setTitle] = useState(""); // title state
-  const [boddy, setBody] = useState(""); // boddy state
+export default function Inputbox({ todos, setTodos }: Props) {
+  const [todoContent, setTodoContent] = useState("");
 
-  const buttonClickSubmit = (event: any) => {
+  const changeContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTodoContent(event.target.value);
+  };
+
+  const buttonClickSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     // 작성버튼 >> onSubmit
-    event.preventDefault(); // 새로고침 막기
-    setTodos((prev: any) => [
-      ...prev,
-      {
-        //이전 값 + 새로운 todo
-        id: v4(),
-        title,
-        boddy,
-      },
-    ]);
+    event.preventDefault();
+    setTodos([...todos, { todoId: uuid(), todoContent, clear: false }]);
+    setTodoContent("");
   };
 
-  const onChangeTitle = (event: any) => {
-    // 제목 : input박스 타이핑 시 title state 변환
-    setTitle(event.target.value);
-  };
-  const onChangeBoddy = (event: any) => {
-    // 내용 : input박스 타이핑 시 boddy state 변환
-    setBody(event.target.value);
-  };
   return (
     <form onSubmit={buttonClickSubmit}>
-      <label>제목 :</label>
-      <input onChange={onChangeTitle} value={title} type="text"></input>
-      <label>내용 :</label>
-      <input onChange={onChangeBoddy} value={boddy} type="text"></input>
-      <button>작성</button>
+      <input
+        className="task-input"
+        value={todoContent}
+        onChange={changeContent}
+        type="text"
+      />
+      <button className="button-create" type="submit">{`작성`}</button>
     </form>
   );
 }

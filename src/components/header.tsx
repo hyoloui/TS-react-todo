@@ -1,5 +1,5 @@
 const Header = ({ children }: MyProps) => {
-  return <h1>{children}</h1>;
+  return <h1 className="header">{children}</h1>;
 };
 
 export default Header;
